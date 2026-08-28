@@ -26,6 +26,8 @@ const ratingSchema = new mongoose.Schema({
 	}
 });
 
+
+// Remove releaseDate
 const movieSchema = new mongoose.Schema({
 	image: {
 		url: { type: String, default: "" },
@@ -39,10 +41,6 @@ const movieSchema = new mongoose.Schema({
 		type: String,
 		enum: ["Movie", "Drama"],
 		required: [true, "Enter content type"]
-	},
-	releaseDate: {
-		type: Date,
-		required: [true, "Enter release date"]
 	},
 	title: {
 		type: String,

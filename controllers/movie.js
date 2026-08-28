@@ -12,7 +12,7 @@ module.exports.addMovie = async (req, res) => {
 	}
 
 	try {
-		const { title, director, year, description, genre, contentType, releaseDate } = req.body;
+		const { title, director, year, description, genre, contentType } = req.body;
 
 		let newMovie = new Movie({
 			title,
@@ -20,8 +20,7 @@ module.exports.addMovie = async (req, res) => {
 			year,
 			description,
 			genre,
-			contentType,
-			releaseDate
+			contentType
 		});
 
 		if (req.file) {
@@ -58,7 +57,7 @@ module.exports.updateMovie = async (req, res) => {
 	}
 
 	try {
-		const { title, director, year, description, genre, contentType, releaseDate } = req.body;
+		const { title, director, year, description, genre, contentType } = req.body;
 		const { movieId } = req.params;
 
 		const movie = await Movie.findById(movieId);
@@ -66,7 +65,7 @@ module.exports.updateMovie = async (req, res) => {
 			return res.status(404).send({ message: "Movie not found" });
 		}
 
-		let updatedFields = { title, director, year, description, genre, contentType, releaseDate };
+		let updatedFields = { title, director, year, description, genre, contentType };
 
 		if (req.file) {
 			// remove old image from Cloudinary if it exists
