@@ -18,5 +18,6 @@ router.patch("/deleteComment/:movieId/:commentId", userVerification, movieContro
 router.post("/addRating/:movieId", userVerification, movieController.addRating);
 router.patch("/updateRating/:movieId", userVerification, movieController.updateRating);
 router.get("/getRatings/:movieId", movieController.getRatings);
+router.delete("/deleteRating/:movieId", userVerification, movieController.deleteRating);
 
 module.exports = router;

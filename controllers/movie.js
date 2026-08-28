@@ -273,6 +273,29 @@ module.exports.updateRating = async (req, res) => {
 	}
 };
 
+module.exports.deleteRating = async (req, res) => {
+	try {
+		const { movieId } = req.params;
+		const userId = req.user.id;
+
+		const movie = await Movie.findById(movieId);
+		if (!movie) {
+			return res.status(404).send({ message: "No movie found" });
+		}
+
+		// Filter out the user's rating from the ratings array entirely
+		movie.ratings = movie.ratings.filter(r => r.userId.toString() !== userId);
+		await movie.save();
+
+		return res.status(200).send({
+			message: "Rating removed successfully",
+			updatedMovie: movie
+		});
+	} catch (error) {
+		return errorHandler(error, req, res);
+	}
+};
+
 module.exports.getRatings = (req, res) => {
 	const { movieId } = req.params;
 	Movie.findById(movieId)
