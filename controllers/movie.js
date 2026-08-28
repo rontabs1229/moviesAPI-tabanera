@@ -151,7 +151,70 @@ module.exports.getComments = (req, res) => {
 		.catch(error => errorHandler(error, req, res));
 };
 
+module.exports.updateComment = async (req, res) => {
+	try {
+		const { movieId, commentId } = req.params;
+		const { comment } = req.body;
+		const userId = req.user.id;
 
+		const movie = await Movie.findById(movieId);
+		if (!movie) {
+			return res.status(404).send({ message: "No movie found" });
+		}
+
+		const targetComment = movie.comments.id(commentId);
+		if (!targetComment) {
+			return res.status(404).send({ message: "Comment not found" });
+		}
+
+		// Ensure only the owner can update their comment
+		if (targetComment.userId.toString() !== userId && !req.user.isAdmin) {
+			return res.status(403).send({ message: "Action forbidden" });
+		}
+
+		targetComment.comment = comment;
+		await movie.save();
+
+		return res.status(200).send({
+			message: "Comment updated successfully",
+			updatedMovie: movie
+		});
+	} catch (error) {
+		return errorHandler(error, req, res);
+	}
+};
+
+module.exports.deleteComment = async (req, res) => {
+	try {
+		const { movieId, commentId } = req.params;
+		const userId = req.user.id;
+
+		const movie = await Movie.findById(movieId);
+		if (!movie) {
+			return res.status(404).send({ message: "No movie found" });
+		}
+
+		const targetComment = movie.comments.id(commentId);
+		if (!targetComment) {
+			return res.status(404).send({ message: "Comment not found" });
+		}
+
+		// Ensure only the owner or an admin can delete the comment
+		if (targetComment.userId.toString() !== userId && !req.user.isAdmin) {
+			return res.status(403).send({ message: "Action forbidden" });
+		}
+
+		targetComment.deleteOne();
+		await movie.save();
+
+		return res.status(200).send({
+			message: "Comment deleted successfully",
+			updatedMovie: movie
+		});
+	} catch (error) {
+		return errorHandler(error, req, res);
+	}
+};
 
 
 module.exports.addRating = async (req, res) => {

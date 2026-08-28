@@ -12,6 +12,8 @@ router.delete("/deleteMovie/:movieId", userVerification, verifyAdmin, movieContr
 
 router.patch("/addComment/:movieId", userVerification, movieController.addComment);
 router.get("/getComments/:movieId", userVerification, movieController.getComments);
+router.patch("/updateComment/:movieId/:commentId", userVerification, movieController.updateComment);
+router.patch("/deleteComment/:movieId/:commentId", userVerification, movieController.deleteComment);
 
 router.post("/addRating/:movieId", userVerification, movieController.addRating);
 router.patch("/updateRating/:movieId", userVerification, movieController.updateRating);
