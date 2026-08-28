@@ -12,7 +12,38 @@ const commentSchema = new mongoose.Schema({
 	}
 });
 
+const ratingSchema = new mongoose.Schema({
+	userId: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "User",
+		required: true
+	},
+	rating: {
+		type: Number,
+		required: [true, "Rating is required"],
+		min: 0,
+		max: 5
+	}
+});
+
 const movieSchema = new mongoose.Schema({
+	image: {
+		url: { type: String, default: "" },
+		publicId: { type: String, default: "" }
+	},
+	ratings: {
+		type: [ratingSchema],
+		default: []
+	},
+	contentType: {
+		type: String,
+		enum: ["Movie", "Drama"],
+		required: [true, "Enter content type"]
+	},
+	releaseDate: {
+		type: Date,
+		required: [true, "Enter release date"]
+	},
 	title: {
 		type: String,
 		required: [true, "Title is required"]
