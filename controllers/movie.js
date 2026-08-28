@@ -38,17 +38,45 @@ module.exports.addMovie = async (req, res) => {
 	}
 };
 
-module.exports.getMovie = (req, res) => {
-	let { movieId } = req.params;
-	return Movie.findById(movieId)
-		.then(result => res.status(200).send(result))
-		.catch(error => errorHandler(error, req, res));
+module.exports.getMovie = async (req, res) => {
+	try {
+		let { movieId } = req.params;
+		const movie = await Movie.findById(movieId)
+			.populate({
+				path: 'comments.userId',
+				select: 'email'
+			})
+			.populate({
+				path: 'ratings.userId',
+				select: 'email'
+			});
+
+		if (!movie) {
+			return res.status(404).send({ message: "No movie found" });
+		}
+
+		return res.status(200).send(movie);
+	} catch (error) {
+		return errorHandler(error, req, res);
+	}
 };
 
-module.exports.getAllMovies = (req, res) => {
-	return Movie.find({})
-		.then(movies => res.status(200).send({ movies }))
-		.catch(error => errorHandler(error, req, res));
+module.exports.getAllMovies = async (req, res) => {
+	try {
+		const movies = await Movie.find({})
+			.populate({
+				path: 'comments.userId',
+				select: 'email'
+			})
+			.populate({
+				path: 'ratings.userId',
+				select: 'email'
+			});
+
+		return res.status(200).send({ movies });
+	} catch (error) {
+		return errorHandler(error, req, res);
+	}
 };
 
 module.exports.updateMovie = async (req, res) => {
