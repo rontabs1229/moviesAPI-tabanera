@@ -20,7 +20,7 @@ const corsOptions = {
     origin: [
         'http://localhost:5173',
         'http://localhost:4000',
-        'https://movieapp-tabanera.vercel.app'
+        'https://moviesapp-tabanera.vercel.app'
     ],
     credentials: true
 };
